@@ -1,0 +1,12 @@
+---
+- name: Instalar Apache PHP y MySQL
+  hosts: all
+  tasks:
+    - name: Install Apache PHP and MySQL
+      apt:
+        name: ['apache2', 'php', 'mysql-server']
+
+    - name: Restart Apache
+      service:
+        name: apache2
+        state: restarted

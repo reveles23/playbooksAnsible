@@ -1,0 +1,17 @@
+---
+- name: Deploy leongto PHP application from scrach
+  hosts: all
+  tasks:
+    - name: Install Apache and PHP
+      apt:
+        name: ['apache2', 'php']
+
+    - name: Clone leongto repository
+      git:
+        repo: 'https://github.com/reveles23/leongto.git'
+        dest: /var/www/leongto
+
+    - name: Restart Apache
+      service:
+        name: apache2
+        state: restarted

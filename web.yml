@@ -1,0 +1,8 @@
+---
+- name: Deploy delfines PHP application from scrach
+  hosts: all
+  tasks:
+    - name: Clone delfines repository
+      git:
+        repo: 'https://github.com/reveles23/delfines'
+        dest: /var/www/delfines

@@ -1,0 +1,30 @@
+---
+- name: Desplegar base de datos MySQL con tablas y columnas
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Actualizar la lista de paquetes
+      apt:
+        update_cache: yes
+
+    - name: Instalar pkg-config
+      apt:
+        name: pkg-config
+        state: present
+
+    - name: Instalar pip3
+      apt:
+        name: python3-pip
+
+    - name: Instalar python3-dev y libmysqlclient-dev
+      apt:
+        name:
+          - python3-dev
+          - libmysqlclient-dev
+        state: present
+
+    - name: Instalar mysqlclient
+      pip:
+        name: mysqlclient
+      become_user: root

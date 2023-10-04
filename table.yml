@@ -1,0 +1,53 @@
+---
+- name: Desplegar base de datos MySQL con tablas y columnas
+  hosts: all
+  become: yes
+
+  vars:
+    mysql_root_password: ""
+    mysql_db_name: "delfines"
+    mysql_db_user: "karla"
+    mysql_db_password: ""
+
+  tasks:
+    - name: Crear usuario de base de datos
+      mysql_user:
+        name: "{{ mysql_db_user }}"
+        password: "{{ mysql_db_password }}"
+        host: localhost
+      become_user: root
+
+    - name: Dar permisos al usuario en la base de datos
+      mysql_user:
+        name: "{{ mysql_db_user }}"
+        priv: "{{ mysql_db_name }}.*:ALL"
+        host: localhost
+      become_user: root
+
+    - name: Crear base de datos
+      mysql_db:
+        name: "{{ mysql_db_name }}"
+        state: present
+        login_user: "{{ mysql_db_user }}"
+        login_password: "{{ mysql_db_password }}"
+      become_user: root
+
+    - name: Seleccionar la base de datos
+      community.mysql.mysql_query:
+        login_user: "{{ mysql_db_user }}"
+        login_password: "{{ mysql_db_password }}"
+        query: "USE {{ mysql_db_name }}"
+      become_user: root
+
+    - name: Crear tabla 'usuarios'
+      community.mysql.mysql_query:
+        login_user: "{{ mysql_db_user }}"
+        login_password: "{{ mysql_db_password }}"
+        query: |
+          CREATE TABLE IF NOT EXISTS {{ mysql_db_name }}.usuarios (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            nombre_completo VARCHAR(255) NOT NULL,
+            correo_electronico VARCHAR(255) NOT NULL,
+            contrasena VARCHAR(255) NOT NULL
+          )
+      become_user: root
